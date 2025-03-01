@@ -1,20 +1,19 @@
----
+# 📌 Chatbot File Q&A
 
-# 📌 INFO-5940
-
-Welcome to the **INFO-5940** repository! This guide will help you set up the development environment using **Docker** in **VS Code**, configure the **OpenAI API key**, manage Git branches, and run Jupyter notebooks for assignments.  
+Welcome to the **Chatbot File Q&A** repository! This guide will help you set up the development environment using **Docker** in **VS Code**, configure the **OpenAI API key**, and run the chatbot that allows users to upload `.txt` and `.pdf` documents and interact with their content.
 
 ---
 
 ## 🛠️ Prerequisites  
 
-Before starting, ensure you have the following installed on your system:  
+Before starting, ensure you have the following installed on your system:
 
-- [Docker](https://www.docker.com/get-started) (Ensure Docker Desktop is running)  
-- [VS Code](https://code.visualstudio.com/)  
-- [VS Code Remote - Containers Extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)  
-- [Git](https://git-scm.com/)  
-- OpenAI API Key  
+- [Docker](https://www.docker.com/get-started) (Ensure Docker Desktop is running)
+- [VS Code](https://code.visualstudio.com/)
+- [VS Code Remote - Containers Extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
+- [Git](https://git-scm.com/)
+- OpenAI API Key
+- Python 3.11+
 
 ---
 
@@ -25,15 +24,15 @@ Before starting, ensure you have the following installed on your system:
 Open a terminal and run:  
 
 ```bash
-git clone https://github.com/AyhamB/INFO-5940.git
-cd INFO-5940
+git clone https://github.com/your-repo/chatbot-file-qna.git
+cd chatbot-file-qna
 ```
 
 ---
 
 ### 2️⃣ Open in VS Code with Docker  
 
-1. Open **VS Code**, navigate to the `INFO-5940` folder.  
+1. Open **VS Code**, navigate to the `chatbot-file-qna` folder.  
 2. Open the Command Palette (`Ctrl+Shift+P` or `Cmd+Shift+P` on Mac) and search for:  
    ```
    Remote-Containers: Reopen in Container
@@ -46,7 +45,7 @@ cd INFO-5940
 
 ### 3️⃣ Configure OpenAI API Key  
 
-Since `docker-compose.yml` expects environment variables, follow these steps:  
+Since `docker-compose.yml` expects environment variables, follow these steps:
 
 #### ➤ Option 1: Set the API Key in `.env` (Recommended)  
 
@@ -56,12 +55,10 @@ Since `docker-compose.yml` expects environment variables, follow these steps:
    touch .env
    ```
 
-2. Add your API key and base URL:  
+2. Add your API key:  
 
    ```plaintext
    OPENAI_API_KEY=your-api-key-here
-   OPENAI_BASE_URL=https://api.ai.it.cornell.edu/
-   TZ=America/New_York
    ```
 
 3. Modify `docker-compose.yml` to include this `.env` file:  
@@ -70,16 +67,13 @@ Since `docker-compose.yml` expects environment variables, follow these steps:
    version: '3.8'
    services:
      devcontainer:
-       container_name: info-5940-devcontainer
+       container_name: chatbot-devcontainer
        build:
          dockerfile: Dockerfile
          target: devcontainer
        environment:
          - OPENAI_API_KEY=${OPENAI_API_KEY}
-         - OPENAI_BASE_URL=${OPENAI_BASE_URL}
-         - TZ=${TZ}
        volumes:
-         - '$HOME/.aws:/root/.aws'
          - '.:/workspace'
        env_file:
          - .env
@@ -95,59 +89,25 @@ Now, your API key will be automatically loaded inside the container.
 
 ---
 
-## 🔀 Managing Git Branches in VS Code  
+## 💬 Running the Chatbot  
 
-Since you may need to switch between different branches for assignments, here’s how to manage Git branches in **VS Code** efficiently.  
-
-### **Option 1: Using the Git Panel (Easiest)**
-1. Open **VS Code**.
-2. Click on the **Source Control** panel on the left (`Ctrl+Shift+G` / `Cmd+Shift+G` on Mac).
-3. Click on the **branch name** (bottom-left corner of VS Code).
-4. A dropdown will appear with all available branches.
-5. Select the branch you want to switch to.  
-
-### **Option 2: Using Command Palette**
-1. Open **VS Code**.
-2. Press `Ctrl+Shift+P` (`Cmd+Shift+P` on Mac) to open the **Command Palette**.
-3. Type **"Git: Checkout to..."** and select it.
-4. Pick the branch you want to switch to.
-
-### **Option 3: Using the Terminal**
-If you prefer the command line inside the container, use:
+Once the environment is set up, run the chatbot using Streamlit:
 
 ```bash
-git branch   # View all branches
-git checkout branch-name   # Switch to a branch
-git pull origin branch-name   # Update the branch (recommended)
+streamlit run chatbot.py
 ```
 
-📌 **Tip:** If you are working on a new feature, create a new branch before making changes:
-
-```bash
-git checkout -b new-feature-branch
-```
+This will start a **web application** where you can upload documents and chat with them.
 
 ---
 
-## 🏃 Running Jupyter Notebook From Outside VS Code
+## 🏗️ Features  
 
-Once inside the **VS Code Dev Container**, you should be able to run the notebooks from the IDE but you can also launch the Jupyter Notebook server:  
-
-```bash
-jupyter notebook --ip 0.0.0.0 --port=8888 --no-browser --allow-root
-```
-
----
-
-### 5️⃣ Access Jupyter Notebook  
-
-When the notebook starts, it will output a URL like this:  
-
-```
-http://127.0.0.1:8888/?token=your_token_here
-```
-
-Copy and paste this link into your browser to access the Jupyter Notebook interface.  
+✅ **Upload .txt and .pdf files**
+✅ **Ask questions based on document content**
+✅ **Handles multiple documents**
+✅ **Processes large files efficiently**
+✅ **Interactive chat interface**
 
 ---
 
@@ -168,10 +128,6 @@ Copy and paste this link into your browser to access the Jupyter Notebook interf
   docker-compose up --build
   ```
 
-### **Cannot Access Jupyter Notebook from outside VS Code?**  
-- Ensure you’re using the correct port (`8888`).  
-- Run `docker ps` to check if the container is running.  
-
 ### **OpenAI API Key Not Recognized?**  
 - Check if `.env` is correctly created.  
 - Ensure `docker-compose.yml` includes `env_file: - .env`.  
@@ -181,8 +137,11 @@ Copy and paste this link into your browser to access the Jupyter Notebook interf
 
 ## 🎯 Next Steps  
 
-- Complete assignments using the Jupyter Notebook.  
-- Use the **OpenAI API** inside Python scripts within the container.  
-- Switch between **Git branches** as needed for different assignments.  
+- Improve the chatbot by fine-tuning responses.  
+- Add support for more document types.  
+- Enhance the UI for a better user experience.  
 
-Happy coding! 🚀
+
+
+
+
